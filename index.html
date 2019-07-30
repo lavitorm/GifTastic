@@ -96,8 +96,8 @@ Then make a function call that takes each topic in the array remakes the buttons
  			};
   		});
       });
-        // When the user clicks one of the still GIPHY images, and it animates  +++++ NOT WORKING +++++
-        // When the user clicks the gif again, it stops playing  +++++ NOT WORKING +++++
+        // When the user clicks one of the still GIPHY images, and it animates. 
+        // When the user clicks the gif again, it stops playing.
         $("#gifLoad").on("click", ".gif", function(event){
 	      event.preventDefault();
 	      var state = $(this).attr("data-state");
@@ -110,7 +110,7 @@ Then make a function call that takes each topic in the array remakes the buttons
         $(this).attr("data-state", "still");
         };
         });
-        // Add a form to your page takes the value from a user input box and adds it into your `topics` array   +++++ NOT WORKING +++++
+        // Add a form to your page takes the value from a user input box and adds it into your `topics` array
         $(".submit").on("click", function(event){
 	      event.preventDefault();
 	      console.log("submit");
