@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+  <html lang="en">
+    <head>
+        <title>GifTastic</title>
+        <!-- meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- style tags -->
+        <style type="text/css">
+            button,
+            div,
+            form,
+            input {
+              margin: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Gif Search</h1>
+            <div id="buttons-view"></div>
+            <form id="gif-form">
+                <label for="topic-input">Topic: </label>
+                <input type="text" id="topic-input"><br>
+            <!-- Button triggers new gif to be added -->
+                <input id="add-gif" type="submit" value="Add a trending gif!">
+            </form>
+            <p id="gifLoad"></p>
+            <p></p>
+          
+<!-- ### Instructions
+1. Before you can make any part of our site work, you need to create an array of strings, 
+each one related to a topic that interests you. Save it to a variable called `topics`.
+   * We chose animals for our theme, but you can make a list to your own liking.
+2. Your app should take the topics in this array and create buttons in your HTML.
+   * Try using a loop that appends a button for each string in the array.
+3. When the user clicks on a button, the page should grab 10 static, non-animated gif images 
+from the GIPHY API and place them on the page.
+4. When the user clicks one of the still GIPHY images, the gif should animate. 
+If the user clicks the gif again, it should stop playing.
+5. Under every gif, display its rating (PG, G, so on).
+   * This data is provided by the GIPHY API.
+   * Only once you get images displaying with button presses should you move on to the next step.
+6. Add a form to your page takes the value from a user input box and adds it into your `topics` array. 
+Then make a function call that takes each topic in the array remakes the buttons on the page.
+-->
+<!-- script tags -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+      // Initial topics array
+      var topics = ["Surfing", "Skateboarding", "Snowboarding", "Soccer", "Football", "Basketball", "Baseball"];
+      var button; //"button" will display topics
+      // function to create new buttons from the topics array
+      var buttonGenerator = function (){
+	    // function to empty the array
+	    $("#buttons-view").empty();
+	    // buttons of initial array
+	    for(i = 0; i < topics.length; i++) {
+		  button = $("<button type=" + "button" + ">" + topics[i] + "</button>").addClass("btn btn-warning").attr("data",topics[i]);
+		  $("#buttons-view").append(button);
+	    };
+      };
+      // Function to place 10 gif images from the GIPHY API on the page
+      $("#buttons-view").on("click", ".btn", function(){
+  		var gifs = $(this).attr("data");
+      // My API Key: bC5Q0Pq5Zdd7aerFKPVaCkG5PCw626P5
+      // queryURL for Giphy API
+  		var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + gifs + "&api_key=bC5Q0Pq5Zdd7aerFKPVaCkG5PCw626P5&limit=10";
+  		$.ajax({
+  			url: queryURL,
+  			method: "GET" 
+  		}).done(function(response){
+  			console.log(response);
+        var results = response.data;
+        for (var i = 0; i < results.length; i++) {
+        // Gifs will be placed on the div
+	      var topicDiv = $("<p>");
+	      // Under every gif, display its rating (PG, G, so on).
+	 			var p = $("<p>");
+	 			p.text(results[i].rating);
+	 			var p = $("<p>").text("Rating: " + results[i].rating);
+	 			// When the user clicks on a button, the page should grab 10 static, non-animated gif images from the GIPHY API and place them on the page
+	 			var topicImage = $("<img>");
+	 			topicImage.attr("src", results[i].images.downsized_large.url);
+	 			topicImage.attr("data-still", results[i].images.downsized_large.url);
+	 			topicImage.attr("data-animate", results[i].images.downsized_large.url);
+	 			topicImage.attr("data-state", "still")
+	 			topicImage.addClass("gif");
+	 			// image is appended to the div
+	 			topicDiv.append(topicImage);
+	 			// rating is appended to the div below the gif
+	 			topicDiv.append(p); 			
+	 			// new images will be placed at the top of the page
+	 			$("#gifLoad").prepend(topicDiv);        
+ 			};
+  		});
+      });
+        // When the user clicks one of the still GIPHY images, and it animates  +++++ NOT WORKING +++++
+        // When the user clicks the gif again, it stops playing  +++++ NOT WORKING +++++
+        $("#gifLoad").on("click", ".gif", function(event){
+	      event.preventDefault();
+	      var state = $(this).attr("data-state");
+	      if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+        } 
+        else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+        };
+        });
+        // Add a form to your page takes the value from a user input box and adds it into your `topics` array   +++++ NOT WORKING +++++
+        $(".submit").on("click", function(event){
+	      event.preventDefault();
+	      console.log("submit");
+	      // sets inputted value to newTopic 
+        var newTopic = ""; // input field ("new topic")
+	      newTopic = $("#buttons-view").val();
+	      // new topic is added to the topics array 
+	      topics.push(newTopic);
+	      console.log(topics);
+	      // call the function that creates the new button
+	      buttonGenerator();
+        });
+        buttonGenerator();
+    </script>
+  </body>
+</html>
